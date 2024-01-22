@@ -14,8 +14,11 @@ function generateRandomString() {}
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/urls", (req, res) => {
+  const longURL = req.body.longURL;
+  const shortURL = generateRandomString(); //to generate a short url 
+  urlDatabase[shortURL] = longURL; //add the short url and keep it in the database with the  
   console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${shortURL}`); // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/urls/new", (req, res) => {
