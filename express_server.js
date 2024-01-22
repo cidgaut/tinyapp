@@ -9,6 +9,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 app.get("/urls/:id", (req, res) => {
   //add both short and long url to templateVars// no sucess with urlDatabase[shortURL] directily
   const shortURL = req.params.id;
