@@ -33,11 +33,12 @@
             <tr>
               <td><%= id %></td>
               <td><%= urls[id] %></td>
+              <!-- nesting method in td -->
               <td>
-              <!-- Commenting is different in ejs -->
-              <!-- Bootstrap JS -->
+              <!-- id nested in site redirect -->
                 <form method="POST" action="/urls/<%= id %>/delete"> 
-                  <button></button>
+                  <!-- button for each item in the column -->
+                  <button type="submit">Delete</button>
                 </form>
               </td>
             </tr>
