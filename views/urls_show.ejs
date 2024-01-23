@@ -21,7 +21,11 @@
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
         <!-- post method to redirect to update, similar to what we did with delete -->
-        <form method="POST" action="/urls/<%= id %>/update"></form>
+        
+        <form method="POST" action="/urls/<%= id %>/update">
+          <!--button to submit-->
+          <button type="submit">Submit</button>
+        </form>
           
     <!-- Bootstrap JS -->
     <script
