@@ -23,6 +23,17 @@ function generateRandomString() {
 
 app.use(express.urlencoded({ extended: true }));
 
+app.post("/urls/:id/delete", (req, res) => {
+  //extract the id
+  const shortURL = req.params.id;
+
+  //delete the url from the database
+  delete urlDatabase[shortURL];
+
+  //redirect
+  res.redirect("/urls");
+})
+
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString(); //to generate a short url 
