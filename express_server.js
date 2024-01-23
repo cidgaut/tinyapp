@@ -34,6 +34,14 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 })
 
+app.post('/urls/:id/update', (req, res) => {
+  const id = req.params.id;
+  const newURL = req.body.newURL;
+  //change url to input id given in newURL text box
+  urlDatabase[id] = newURL;
+  res.redirect('/urls');
+});
+
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString(); //to generate a short url 
