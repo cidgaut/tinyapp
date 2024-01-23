@@ -9,7 +9,17 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-function generateRandomString() {}
+function generateRandomString() {
+  //combination of 6 digits
+  let randomString = "";
+  //alphanumeric string
+  let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  //add six random characters
+  for (let i = 0; i < 6; i++) {
+    randomString += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return randomString;
+}
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,6 +33,12 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
+});
+
+app.get("/u/:id", (req, res) => {  //to redirect the client. 
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
 });
 
 app.get("/urls/:id", (req, res) => {
