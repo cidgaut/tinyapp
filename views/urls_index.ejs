@@ -33,7 +33,13 @@
             <tr>
               <td><%= id %></td>
               <td><%= urls[id] %></td>
-              <form method="POST" action="/urls/9sm5xK/delete"></form>
+              <td>
+              <!-- Commenting is different in ejs -->
+              <!-- Bootstrap JS -->
+                <form method="POST" action="/urls/<%= id %>/delete"> 
+                  <button></button>
+                </form>
+              </td>
             </tr>
           <% } %>
         </tbody>
