@@ -23,6 +23,19 @@ function generateRandomString() {
 
 app.use(express.urlencoded({ extended: true }));
 
+//post route for login value
+//just /login
+app.post("/login", (req, res) => {
+  //get username
+  const username = req.body.username;
+
+  //set username
+  res.cookie('username', username);
+
+  //redirect
+  res.redirect("/urls");
+})
+
 app.post("/urls/:id/delete", (req, res) => {
   //extract the id
   const shortURL = req.params.id;
