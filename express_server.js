@@ -20,14 +20,14 @@ function generateRandomString() {
 }
 
 //helper function to keep code "DRY"
-function getUserByEmail() {
+const getUserByEmail = function(email) {
   //look through users for id with for in (object)
   for (const userId in users) {
     if (users[userId].email === email) {
       return users[userId];
     }
   }
-  return {};
+  return null;
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -54,8 +54,15 @@ app.post("/register", (req, res) => {
 
   //error messages
   //If email/password are empty, send back response with 400 status code
+  if (!email || !password) {
+    res.status(400).send("Please fill in both email and password to register.");
+    return;
+  }
   //If someone tries to register with an email that already exists in users object, send response back with 400 status code
- 
+  if (getUserByEmail(email)) {
+    res.status(400).send("Email already registered.");
+    return;
+  }
   const userID = generateRandomString();
   
   const newUser = {
@@ -73,14 +80,14 @@ app.post("/register", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  //res.clearCookie('username');
   res.redirect("/urls");
 });
 
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  console.log("received username:", username);
-  res.cookie('username', username);
+  //const username = req.body.username;
+  //console.log("received username:", username);
+  //res.cookie('username', username);
   res.redirect("/urls");
 })
 
