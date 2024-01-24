@@ -16,13 +16,26 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <!-- add conditional statement for seperate views if user is signed in or not-->
+        <% if (username) { %>
+          <!--logout-->
+        <form method="POST" action="/logout" class="form-inline">
+          <!--button to submit-->
+          <label for="username" class="mr-2">Logged in as:<%= username %></label>
+          <!--value needs to be empty for user input, now changed for <%= username %> to display inputted username-->
+            
+          <button type="submit">Logout</button>
+        </form>
+        <% } else { %>
+          <!--login form-->
         <form method="POST" action="/login" class="form-inline">
           <!--button to submit-->
           <label for="username" class="mr-2">username</label>
-          <!--value needs to be empty for user input-->
+          <!--value needs to be empty for user input, now changed for <%= username %> to display inputted username-->
             <input type="text" class="form-control" id="username" name="username" value="" required>
           <button type="submit">Login</button>
         </form>
+        <% } %>
       </div>
     </div>
   </nav>
