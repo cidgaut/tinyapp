@@ -78,6 +78,13 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`); // Respond with 'Ok' (we will replace this)
 });
 
+
+app.get("/register", (req, res) => {
+  //should retrieve email and password
+  
+  res.render("register");
+});
+
 app.get("/urls/new", (req, res) => {
   //added username to /new render as it was showing as undefined.
   const templateVars = {
