@@ -119,6 +119,8 @@ app.get("/u/:id", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
+  const user_id =req.cookies["user_id"];
+  const user = users[user_id];
   const templateVars = { 
     id: shortURL,
     longURL: longURL,
@@ -129,6 +131,8 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const user_id =req.cookies["user_id"];
+  const user = users[user_id];
   const templateVars  = { 
     //username cookie appears here too, replace
     user,
