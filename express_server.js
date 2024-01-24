@@ -1,8 +1,7 @@
 const express = require("express");
-//forgot to add cookie-parser
 const cookieParser = require('cookie-parser');
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080; 
 
 app.set("view engine", "ejs");
 
@@ -12,11 +11,8 @@ const urlDatabase = {
 };
 
 function generateRandomString() {
-  //combination of 6 digits
   let randomString = "";
-  //alphanumeric string
   let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  //add six random characters
   for (let i = 0; i < 6; i++) {
     randomString += characters.charAt(Math.floor(Math.random() * characters.length))
   }
@@ -24,58 +20,39 @@ function generateRandomString() {
 }
 
 app.use(express.urlencoded({ extended: true }));
-//adding cookieparser here too
 app.use(cookieParser());
 
-//post route for logout
 app.post("/logout", (req, res) => {
-  //clear username
   res.clearCookie('username');
-
-  //send back to /urls
   res.redirect("/urls");
 });
 
-//post route for login value
-//just /login
 app.post("/login", (req, res) => {
-  //get username
   const username = req.body.username;
-
   console.log("received username:", username);
-
-  //set username
   res.cookie('username', username);
-
-  //redirect
   res.redirect("/urls");
 })
 
 app.post("/urls/:id/delete", (req, res) => {
-  //extract the id
   const shortURL = req.params.id;
-
-  //delete the url from the database
   delete urlDatabase[shortURL];
-
-  //redirect
   res.redirect("/urls");
 })
 
 app.post('/urls/:id/update', (req, res) => {
   const id = req.params.id;
   const newURL = req.body.newURL;
-  //change url to input id given in newURL text box
   urlDatabase[id] = newURL;
   res.redirect('/urls');
 });
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
-  const shortURL = generateRandomString(); //to generate a short url 
-  urlDatabase[shortURL] = longURL; //add the short url and keep it in the database with the  
-  console.log(req.body); // Log the POST request body to the console
-  res.redirect(`/urls/${shortURL}`); // Respond with 'Ok' (we will replace this)
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL; 
+  console.log(req.body);
+  res.redirect(`/urls/${shortURL}`);
 });
 
 
@@ -86,38 +63,35 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  //added username to /new render as it was showing as undefined.
   const templateVars = {
-    username: req.cookies["username"],
+  username: req.cookies["username"],
   };
   res.render("urls_new", templateVars);
 });
 
-app.get("/u/:id", (req, res) => {  //to redirect the client. 
+app.get("/u/:id", (req, res) => {
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
 
 app.get("/urls/:id", (req, res) => {
-  //add both short and long url to templateVars// no sucess with urlDatabase[shortURL] directily
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
   const templateVars = { 
     id: shortURL,
     longURL: longURL,
-    //username added here to be sent to urls_show
     username: req.cookies["username"],
   };
   res.render("urls_show", templateVars);
 });
 
 app.get("/urls", (req, res) => {
-  //add username as assigned variable 
   const templateVars  = { 
     username: req.cookies["username"],
-    urls : urlDatabase};
-  res.render("urls_index", templateVars);
+    urls : urlDatabase
+  };
+    res.render("urls_index", templateVars);
 });
 
 app.get("/", (req, res) => {
