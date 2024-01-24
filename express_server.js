@@ -1,4 +1,6 @@
 const express = require("express");
+//forgot to add cookie-parser
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -22,6 +24,32 @@ function generateRandomString() {
 }
 
 app.use(express.urlencoded({ extended: true }));
+//adding cookieparser here too
+app.use(cookieParser());
+
+//post route for logout
+app.post("/logout", (req, res) => {
+  //clear username
+  res.clearCookie('username');
+
+  //send back to /urls
+  res.redirect("/urls");
+});
+
+//post route for login value
+//just /login
+app.post("/login", (req, res) => {
+  //get username
+  const username = req.body.username;
+
+  console.log("received username:", username);
+
+  //set username
+  res.cookie('username', username);
+
+  //redirect
+  res.redirect("/urls");
+})
 
 app.post("/urls/:id/delete", (req, res) => {
   //extract the id
@@ -51,7 +79,11 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  //added username to /new render as it was showing as undefined.
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/u/:id", (req, res) => {  //to redirect the client. 
@@ -64,12 +96,20 @@ app.get("/urls/:id", (req, res) => {
   //add both short and long url to templateVars// no sucess with urlDatabase[shortURL] directily
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
-  const templateVars = { id: shortURL, longURL: longURL };
+  const templateVars = { 
+    id: shortURL,
+    longURL: longURL,
+    //username added here to be sent to urls_show
+    username: req.cookies["username"],
+  };
   res.render("urls_show", templateVars);
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars  = { urls : urlDatabase};
+  //add username as assigned variable 
+  const templateVars  = { 
+    username: req.cookies["username"],
+    urls : urlDatabase};
   res.render("urls_index", templateVars);
 });
 
@@ -96,4 +136,4 @@ app.get("/set", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
-});
+}); 
