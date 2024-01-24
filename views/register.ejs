@@ -18,39 +18,23 @@ include a form with an email address and password field-->
       crossorigin="anonymous"
     />
     <!--copy pasted views ejs file. changing the meat of the file below-->
-    <title>TinyApp</title>
+    <title>Register user</title>
   </head>
   <body>
-    <%- include('partials/_header') %>
-    <main style="margin: 1em;">
-      <h3>My URLs</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Short URL ID</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (let id in urls) { %>
-            <tr>
-              <td><%= id %></td>
-              <td><%= urls[id] %></td>
-              <!-- edit link for each URL -->
-              <td>
-                <a href="/urls/<%= id %>">Edit</a>
-              </td>
-              <!-- nesting method in td -->
-              <td>
-              <!-- id nested in site redirect -->
-                <form method="POST" action="/urls/<%= id %>/delete"> 
-                  <!-- button for each item in the column -->
-                  <button type="submit">Delete</button>
-                </form>
-              </td>
-            </tr>
-          <% } %>
+    <%- %>
+    <!--posted form from other ejs file, keeping one button but two inputs-->
+    <!--POST to /register when button is pushed-->
+    <form method="POST" action="/register" class="form-inline">
+      <!--email label and input-->
+      <label for="email" class="mr-2">email</label>
+        <input type="email" class="form-control" name="email" value="" required>
+        <!--password label and input-->
+      <label for="password" class="mr-2">password</label>
+        <input type="password" class="form-control" name="password" value="" required>
+        <!--button to submit both inputs-->
+        <button type="submit">Register</button>
+    </form>
+          <%= %>
         </tbody>
       </table>
     </main>
