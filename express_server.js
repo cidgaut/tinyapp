@@ -19,10 +19,14 @@ function generateRandomString() {
   return randomString;
 }
 
+//helper function to keep code "DRY"
+function getUserByEmail() {
+  return;
+}
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-//users object added 
 const users = {
   userRandomID: {
     id: "userRandomID",
@@ -36,24 +40,22 @@ const users = {
   },
 };
 
-//post to register to save user in cookies
+//removed most comments but this needs to have error conditions
 app.post("/register", (req, res) => {
-  //set values
+  
   const email = req.body.email;
   const password = req.body.password;
-  //random user id with already created url function
+ 
   const userID = generateRandomString();
-  //create new user with above values
+  
   const newUser = {
     id: userID,
     email: email,
     password: password,
   };
 
-  //add newUSer to user object
   users[userID] = newUser,
 
-  //set new cookie value to userID instead of username
   res.cookie('user_id', userID);
   console.log(users)
   res.redirect("/urls");
