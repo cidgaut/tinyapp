@@ -109,6 +109,11 @@ app.post('/urls/:id/update', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
+  //if user is not logged in, respond with html message on why they can't shorten URLS
+  if  (!req.cookies["user_id"]) {
+    res.status(403).send("You must be logged in to shorten URLs.");
+    return;
+  }
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL; 
@@ -136,12 +141,19 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  //if user is not logged in redirect to login
+  if (!req.cookies["user_id"]) {
+    res.redirect("/login");
+  } else {
+
+
   const user_id =req.cookies["user_id"];
   const user = users[user_id];
   const templateVars = {
-  user,
+    user,
   };
   res.render("urls_new", templateVars);
+  }
 });
 
 app.get("/u/:id", (req, res) => {
