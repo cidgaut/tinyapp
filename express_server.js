@@ -80,11 +80,13 @@ app.post("/register", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
+  //will reformat cookies, logout will need to clear user instead of username
   //res.clearCookie('username');
   res.redirect("/urls");
 });
 
 app.post("/login", (req, res) => {
+  //will reformat cookies
   //const username = req.body.username;
   //console.log("received username:", username);
   //res.cookie('username', username);
@@ -112,15 +114,18 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-
-app.get("/register", (req, res) => {
+//display /login page from login.ejs
+app.get("/login", (req, res) => {
   //should retrieve email and password
   
+  res.render("login");
+});
+
+app.get("/register", (req, res) => {
   res.render("register");
 });
-//update get to diplay use_id in template instead of username
+
 app.get("/urls/new", (req, res) => {
-  //take away username cookie to be diplayed to new, set value to diplay fall of user
   const user_id =req.cookies["user_id"];
   const user = users[user_id];
   const templateVars = {
@@ -143,7 +148,6 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: shortURL,
     longURL: longURL,
-    //username cookie appears here too, replace
     user,
   };
   res.render("urls_show", templateVars);
@@ -153,7 +157,6 @@ app.get("/urls", (req, res) => {
   const user_id =req.cookies["user_id"];
   const user = users[user_id];
   const templateVars  = { 
-    //username cookie appears here too, replace
     user,
     urls : urlDatabase
   };
