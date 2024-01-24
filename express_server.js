@@ -46,19 +46,15 @@ const users = {
   },
 };
 
-//removed most comments but this needs to have error conditions
 app.post("/register", (req, res) => {
   
   const email = req.body.email;
   const password = req.body.password;
 
-  //error messages
-  //If email/password are empty, send back response with 400 status code
   if (!email || !password) {
     res.status(400).send("Please fill in both email and password to register.");
     return;
   }
-  //If someone tries to register with an email that already exists in users object, send response back with 400 status code
   if (getUserByEmail(email)) {
     res.status(400).send("Email already registered.");
     return;
@@ -79,7 +75,6 @@ app.post("/register", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  //will reformat cookies, logout will need to clear user instead of username
   res.clearCookie('user_id');
   res.redirect("/login");
 });
@@ -87,20 +82,15 @@ app.post("/logout", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-
-  //get user with getuserbyemail function 
   const user = getUserByEmail(email);
   if (!user) {
     res.status(403).send("email not found");
     return;
   }
-  
   if (user.password !== password) {
     res.status(403).send("incorrect password");
     return;
   }
-
-  //changed to user.id
   res.cookie('user_id', user.id);
   res.redirect("/urls");
 })
@@ -126,15 +116,23 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-//display /login page from login.ejs
+
 app.get("/login", (req, res) => {
-  //should retrieve email and password
-  
+  //render back to /url if member is already logged in
+  if (req.cookies["user_id"]) {
+    res.redirect("/urls");
+  } else {
   res.render("login");
+  }
 });
 
 app.get("/register", (req, res) => {
+  //render back to /url if member is already logged in
+  if (req.cookies["user_id"]) {
+    res.redirect("/urls");
+  } else {
   res.render("register");
+  }
 });
 
 app.get("/urls/new", (req, res) => {
