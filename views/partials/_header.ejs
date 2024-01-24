@@ -27,13 +27,9 @@
           <button type="submit">Logout</button>
         </form>
         <% } else { %>
-          <!--login form-->
-        <form method="POST" action="/login" class="form-inline">
-          <button type="submit">Login</button>
-        </form>
-        <form method="POST" action="/register" class="form-inline">
-          <button type="submit">Register</button>
-        </form>
+          <!--buttons would submit, taking a class from the top of header for new referral links-->
+       <a class="nav-item nav-link" href="/login">Login</a>
+       <a class="nav-item nav-link" href="/register">register</a>
         <% } %>
       </div>
     </div>

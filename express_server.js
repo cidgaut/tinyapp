@@ -80,8 +80,8 @@ app.post("/register", (req, res) => {
 
 app.post("/logout", (req, res) => {
   //will reformat cookies, logout will need to clear user instead of username
-  //res.clearCookie('username');
-  res.redirect("/urls");
+  res.clearCookie('user_id');
+  res.redirect("/login");
 });
 
 app.post("/login", (req, res) => {
@@ -100,8 +100,8 @@ app.post("/login", (req, res) => {
     return;
   }
 
-
-  res.cookie('user_id', userID);
+  //changed to user.id
+  res.cookie('user_id', user.id);
   res.redirect("/urls");
   res.redirect("/urls");
 })
