@@ -38,6 +38,11 @@ const users = {
 
 //post to register to save user in cookies
 app.post("/register", (req, res) => {
+  //set values
+  const email = req.body.email;
+  const password = req.body.password;
+  //random user id with already created url function
+  const userID = generateRandomString();
 
   res.cookie('username');
   res.redirect("/urls");
