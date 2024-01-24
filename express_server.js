@@ -43,7 +43,17 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
   //random user id with already created url function
   const userID = generateRandomString();
+  //create new user with above values
+  const newUser = {
+    id: userID,
+    email: email,
+    password: password,
+  };
 
+  //add newUSer to user object
+  users[userID] = newUser,
+
+  
   res.cookie('username');
   res.redirect("/urls");
 });
