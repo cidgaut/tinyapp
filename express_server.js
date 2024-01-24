@@ -21,7 +21,13 @@ function generateRandomString() {
 
 //helper function to keep code "DRY"
 function getUserByEmail() {
-  return;
+  //look through users for id with for in (object)
+  for (const userId in users) {
+    if (users[userId].email === email) {
+      return users[userId];
+    }
+  }
+  return {};
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +51,10 @@ app.post("/register", (req, res) => {
   
   const email = req.body.email;
   const password = req.body.password;
+
+  //error messages
+  //If email/password are empty, send back response with 400 status code
+  //If someone tries to register with an email that already exists in users object, send response back with 400 status code
  
   const userID = generateRandomString();
   
