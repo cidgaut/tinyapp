@@ -17,11 +17,11 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <!-- add conditional statement for seperate views if user is signed in or not-->
-        <% if (username) { %>
+        <% if (user) { %>
           <!--logout-->
         <form method="POST" action="/logout" class="form-inline">
           <!--button to submit-->
-          <label for="username" class="mr-2">Logged in as:<%= username %></label>
+          <label for="email" class="mr-2">Logged in as:<%= user.email %></label>
           <!--value needs to be empty for user input, now changed for <%= username %> to display inputted username-->
             
           <button type="submit">Logout</button>
