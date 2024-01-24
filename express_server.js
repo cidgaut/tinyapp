@@ -22,6 +22,28 @@ function generateRandomString() {
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+//users object added 
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
+//post to register to save user in cookies
+app.post("/register", (req, res) => {
+
+  res.cookie('username');
+  res.redirect("/urls");
+});
+
+
 app.post("/logout", (req, res) => {
   res.clearCookie('username');
   res.redirect("/urls");
