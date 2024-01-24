@@ -17,26 +17,16 @@ include a form with an email address and password field-->
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     />
-    <!--copy pasted views ejs file. changing the meat of the file below-->
     <title>Register user</title>
   </head>
   <body>
-    <%- %>
-    <!--posted form from other ejs file, keeping one button but two inputs-->
-    <!--POST to /register when button is pushed-->
     <form method="POST" action="/register" class="form-inline">
-      <!--email label and input-->
       <label for="email" class="mr-2">email</label>
         <input type="email" class="form-control" name="email" value="" required>
-        <!--password label and input-->
       <label for="password" class="mr-2">password</label>
         <input type="password" class="form-control" name="password" value="" required>
-        <!--button to submit both inputs-->
         <button type="submit">Register</button>
     </form>
-          <%= %>
-        </tbody>
-      </table>
     </main>
     <!-- Bootstrap JS -->
     <script
