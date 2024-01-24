@@ -74,7 +74,6 @@ app.post("/register", (req, res) => {
   users[userID] = newUser,
 
   res.cookie('user_id', userID);
-  console.log(users)
   res.redirect("/urls");
 });
 
@@ -86,10 +85,24 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  //will reformat cookies
-  //const username = req.body.username;
-  //console.log("received username:", username);
-  //res.cookie('username', username);
+  const email = req.body.email;
+  const password = req.body.password;
+
+  //get user with getuserbyemail function 
+  const user = getUserByEmail(email);
+  if (!user) {
+    res.status(403).send("email not found");
+    return;
+  }
+  
+  if (user.password !== password) {
+    res.status(403).send("incorrect password");
+    return;
+  }
+
+
+  res.cookie('user_id', userID);
+  res.redirect("/urls");
   res.redirect("/urls");
 })
 
