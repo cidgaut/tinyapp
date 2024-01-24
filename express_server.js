@@ -53,8 +53,9 @@ app.post("/register", (req, res) => {
   //add newUSer to user object
   users[userID] = newUser,
 
-  
-  res.cookie('username');
+  //set new cookie value to userID instead of username
+  res.cookie('user_id', userID);
+  console.log(users)
   res.redirect("/urls");
 });
 
@@ -98,10 +99,13 @@ app.get("/register", (req, res) => {
   
   res.render("register");
 });
-
+//update get to diplay use_id in template instead of username
 app.get("/urls/new", (req, res) => {
+  //take away username cookie to be diplayed to new, set value to diplay fall of user
+  const user_id =req.cookies["user_id"];
+  const user = users[user_id];
   const templateVars = {
-  username: req.cookies["username"],
+  user,
   };
   res.render("urls_new", templateVars);
 });
@@ -118,14 +122,16 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: shortURL,
     longURL: longURL,
-    username: req.cookies["username"],
+    //username cookie appears here too, replace
+    user,
   };
   res.render("urls_show", templateVars);
 });
 
 app.get("/urls", (req, res) => {
   const templateVars  = { 
-    username: req.cookies["username"],
+    //username cookie appears here too, replace
+    user,
     urls : urlDatabase
   };
     res.render("urls_index", templateVars);
