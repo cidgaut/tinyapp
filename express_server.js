@@ -103,7 +103,6 @@ app.post("/login", (req, res) => {
   //changed to user.id
   res.cookie('user_id', user.id);
   res.redirect("/urls");
-  res.redirect("/urls");
 })
 
 app.post("/urls/:id/delete", (req, res) => {
