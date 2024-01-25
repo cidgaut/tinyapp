@@ -151,7 +151,7 @@ app.post('/urls/:id/update', (req, res) => {
   //should return a relevant error message if the user does not own the URL
   const user_id = req.cookies["user_id"];
 
-  if (user_id !== urlDatabase[shortURL].userID) {
+  if (user_id !== urlDatabase[id].userID) {
     return res.status(403).send("Unable to edit another users URL");
   }
 
@@ -221,7 +221,7 @@ app.get("/u/:id", (req, res) => {
     res.status(404).send("Short URL does not exist");
     return;
   }
-  res.redirect(longURL);
+  res.redirect(longURL.longURL);
 });
 
 app.get("/urls/:id", (req, res) => {
