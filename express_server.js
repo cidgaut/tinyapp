@@ -1,5 +1,7 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+//new dependency therefore new require
+const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; 
 
@@ -17,10 +19,12 @@ const urlDatabase = {
 };
 
 const urlsForUser = function(id) {
+  //received type error userID is undefined updated function 
   const userUrls = {};
   for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      userUrls[shortURL] = urlDatabase[shortURL];
+    const urlObject = urlDatabase[shortURL];
+    if (urlObject && urlObject.userID === id) {
+      userUrls[shortURL] = urlObject;
     }
   }
   return userUrls;
@@ -61,6 +65,7 @@ const users = {
 };
 
 app.post("/register", (req, res) => {
+  //password needs to be udpated from register
   
   const email = req.body.email;
   const password = req.body.password;
@@ -73,12 +78,16 @@ app.post("/register", (req, res) => {
     res.status(400).send("Email already registered.");
     return;
   }
+  // declare hashedpassword before using it in newuser during registry
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   const userID = generateRandomString();
   
   const newUser = {
     id: userID,
     email: email,
-    password: password,
+    //password for newuser should now be stored as a hashed password
+    password: hashedPassword,
   };
 
   users[userID] = newUser,
@@ -94,6 +103,8 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  //password needs to be hashed in login as well to compare match
+
   const email = req.body.email;
   const password = req.body.password;
   const user = getUserByEmail(email);
@@ -101,7 +112,12 @@ app.post("/login", (req, res) => {
     res.status(403).send("email not found");
     return;
   }
-  if (user.password !== password) {
+
+  //need to update how the hashed password comparison works. is password correct return true or false
+  const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+
+  //upate for comparison, if hashed key doesn't match 
+  if (!isPasswordCorrect) {
     res.status(403).send("incorrect password");
     return;
   }
@@ -245,6 +261,7 @@ app.get("/urls/:id", (req, res) => {
     id: shortURL,
     longURL:longURL,
     user: user_id,
+    urlObject: urlObject,
   };
   res.render("urls_show", templateVars);
 });
