@@ -137,10 +137,23 @@ app.post('/urls/:id/update', (req, res) => {
   const id = req.params.id;
   const newURL = req.body.newURL;
 
-  //Ensure Users Can Only Edit or Delete Their Own URLs
   //should return a relevant error message if id does not exist
+  if (!urlDatabase[shortURL]) {
+    return res.status(404).send("URL not found");
+  }
+
   //should return a relevant error message if the user is not logged in
+  if (!req.cookies["user_id"]) {
+    return res.status(404).send("You must log in to edit URLs");
+  }
+
   //should return a relevant error message if the user does not own the URL
+  const user_id = req.cookies["user_id"];
+
+  if (user_id !== urlDatabase[shortURL].userID) {
+    return res.status(403).send("Unable to edit another users URL");
+  }
+
 
   urlDatabase[id] = newURL;
   res.redirect('/urls');
