@@ -8,8 +8,15 @@ app.set("view engine", "ejs");
 const urlDatabase = {
   //changing url database so that URLS belong to users.
   //creating object within object with original key "shortURL" as first key.
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  //setting both as userRandomID to see if they appear when I log in.
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID",
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "userRandomID",
+  }
 };
 
 function generateRandomString() {
