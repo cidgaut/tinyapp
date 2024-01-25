@@ -19,6 +19,18 @@ const urlDatabase = {
   }
 };
 
+//Create a function named urlsForUser(id) which returns
+//the URLs where the userID is equal to the id of the currently logged-in user.
+const urlsForUser = function(id) {
+  const userUrls = {};
+  for (const shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id) {
+      userUrls[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  returnuserUrls;
+}
+ 
 function generateRandomString() {
   let randomString = "";
   let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -213,7 +225,15 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const user_id =req.cookies["user_id"];
-  const user = users[user_id];
+  //verify if user has logged in 
+  if (!user_id) {
+    //return status message
+    return res.status(403).send("please log in to access URLs");
+  }
+
+  //only show user his own urls
+  const userUrls = urlsForUser(user_id);
+
   const templateVars  = { 
     user,
     urls : urlDatabase
