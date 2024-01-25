@@ -111,6 +111,11 @@ app.post("/login", (req, res) => {
 
 app.post("/urls/:id/delete", (req, res) => {
   const shortURL = req.params.id;
+
+  //Ensure Users Can Only Edit or Delete Their Own URLs
+  //should return a relevant error message if id does not exist
+  //should return a relevant error message if the user is not logged in
+  //should return a relevant error message if the user does not own the URL
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 })
@@ -118,6 +123,12 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post('/urls/:id/update', (req, res) => {
   const id = req.params.id;
   const newURL = req.body.newURL;
+
+  //Ensure Users Can Only Edit or Delete Their Own URLs
+  //should return a relevant error message if id does not exist
+  //should return a relevant error message if the user is not logged in
+  //should return a relevant error message if the user does not own the URL
+
   urlDatabase[id] = newURL;
   res.redirect('/urls');
 });
