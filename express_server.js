@@ -28,7 +28,7 @@ const urlsForUser = function(id) {
       userUrls[shortURL] = urlDatabase[shortURL];
     }
   }
-  returnuserUrls;
+  return userUrls;
 }
  
 function generateRandomString() {
@@ -216,8 +216,9 @@ app.get("/urls/:id", (req, res) => {
 };
   
   const templateVars = { 
+    //templateVars updated for userspecific longURL and user_id values assigned above
     id: shortURL,
-    longURL: longURL,
+    longURL:longURL,
     user: user_id,
   };
   res.render("urls_show", templateVars);
@@ -235,8 +236,9 @@ app.get("/urls", (req, res) => {
   const userUrls = urlsForUser(user_id);
 
   const templateVars  = { 
-    user,
-    urls : urlDatabase
+    //change how we access urlDatabase to show only urls specific to user
+    user: users[user_id],
+    urls : userUrls,
   };
     res.render("urls_index", templateVars);
 });
