@@ -6,6 +6,8 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 
 const urlDatabase = {
+  //changing url database so that URLS belong to users.
+  //creating object within object with original key "shortURL" as first key.
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -19,9 +21,8 @@ function generateRandomString() {
   return randomString;
 }
 
-//helper function to keep code "DRY"
+
 const getUserByEmail = function(email) {
-  //look through users for id with for in (object)
   for (const userId in users) {
     if (users[userId].email === email) {
       return users[userId];
@@ -109,7 +110,6 @@ app.post('/urls/:id/update', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  //if user is not logged in, respond with html message on why they can't shorten URLS
   if  (!req.cookies["user_id"]) {
     res.status(403).send("You must be logged in to shorten URLs.");
     return;
@@ -123,7 +123,7 @@ app.post("/urls", (req, res) => {
 
 
 app.get("/login", (req, res) => {
-  //render back to /url if member is already logged in
+  
   if (req.cookies["user_id"]) {
     res.redirect("/urls");
   } else {
@@ -132,7 +132,7 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  //render back to /url if member is already logged in
+  
   if (req.cookies["user_id"]) {
     res.redirect("/urls");
   } else {
@@ -141,7 +141,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  //if user is not logged in redirect to login
+  
   if (!req.cookies["user_id"]) {
     res.redirect("/login");
   } else {
@@ -157,12 +157,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  //if the shortened url does not exist
+  
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
 
   if (!longURL) {
-    //dislay error message
+    
     res.status(404).send("Short URL does not exist");
     return;
   }
