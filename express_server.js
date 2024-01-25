@@ -6,9 +6,6 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 
 const urlDatabase = {
-  //changing url database so that URLS belong to users.
-  //creating object within object with original key "shortURL" as first key.
-  //setting both as userRandomID to see if they appear when I log in.
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userID: "userRandomID",
@@ -19,8 +16,6 @@ const urlDatabase = {
   }
 };
 
-//Create a function named urlsForUser(id) which returns
-//the URLs where the userID is equal to the id of the currently logged-in user.
 const urlsForUser = function(id) {
   const userUrls = {};
   for (const shortURL in urlDatabase) {
@@ -39,7 +34,6 @@ function generateRandomString() {
   }
   return randomString;
 }
-
 
 const getUserByEmail = function(email) {
   for (const userId in users) {
@@ -135,16 +129,13 @@ app.post("/urls", (req, res) => {
   }
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
-
-  //cookie dependent
   const user_id = req.cookies["user_id"];
-  //needs refactoring
+ 
   urlDatabase[shortURL] = {
     longURL: longURL,
     userID: user_id,
   };
   
-  //console.log(req.body);
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -197,10 +188,8 @@ app.get("/u/:id", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
-  //longURL refactoring to urlObject
   const urlObject = urlDatabase[shortURL];
 
-  //status for url not found
   if (!urlObject) {
     res.status(404).send("url not found");
     return;
@@ -209,14 +198,12 @@ app.get("/urls/:id", (req, res) => {
   const longURL = urlObject.longURL;
   const user_id = req.cookies["user_id"];
 
-  //verify if url belongs to the user
   if (user_id !== urlObject.userID) {
     res.status(403).send("Access to URL denied");
     return;
 };
   
   const templateVars = { 
-    //templateVars updated for userspecific longURL and user_id values assigned above
     id: shortURL,
     longURL:longURL,
     user: user_id,
@@ -226,17 +213,13 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const user_id =req.cookies["user_id"];
-  //verify if user has logged in 
   if (!user_id) {
-    //return status message
     return res.status(403).send("please log in to access URLs");
   }
 
-  //only show user his own urls
   const userUrls = urlsForUser(user_id);
 
   const templateVars  = { 
-    //change how we access urlDatabase to show only urls specific to user
     user: users[user_id],
     urls : userUrls,
   };
