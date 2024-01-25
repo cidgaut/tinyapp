@@ -123,8 +123,16 @@ app.post("/urls", (req, res) => {
   }
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL; 
-  console.log(req.body);
+
+  //cookie dependent
+  const user_id = req.cookies["user_id"];
+  //needs refactoring
+  urlDatabase[shortURL] = {
+    longURL: longURL,
+    userID: user_id,
+  };
+  
+  //console.log(req.body);
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -164,7 +172,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
 
@@ -178,13 +185,28 @@ app.get("/u/:id", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL];
-  const user_id =req.cookies["user_id"];
-  const user = users[user_id];
+  //longURL refactoring to urlObject
+  const urlObject = urlDatabase[shortURL];
+
+  //status for url not found
+  if (!urlObject) {
+    res.status(404).send("url not found");
+    return;
+  }
+  
+  const longURL = urlObject.longURL;
+  const user_id = req.cookies["user_id"];
+
+  //verify if url belongs to the user
+  if (user_id !== urlObject.userID) {
+    res.status(403).send("Access to URL denied");
+    return;
+};
+  
   const templateVars = { 
     id: shortURL,
     longURL: longURL,
-    user,
+    user: user_id,
   };
   res.render("urls_show", templateVars);
 });
