@@ -138,7 +138,8 @@ app.post('/urls/:id/update', (req, res) => {
   const newURL = req.body.newURL;
 
   //should return a relevant error message if id does not exist
-  if (!urlDatabase[shortURL]) {
+  //changed shortURL to id
+  if (!urlDatabase[id]) {
     return res.status(404).send("URL not found");
   }
 
