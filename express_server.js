@@ -157,8 +157,15 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
+  //if the shortened url does not exist
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
+
+  if (!longURL) {
+    //dislay error message
+    res.status(404).send("Short URL does not exist");
+    return;
+  }
   res.redirect(longURL);
 });
 
