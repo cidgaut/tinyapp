@@ -174,7 +174,7 @@ app.post('/urls/:id/update', (req, res) => {
   }
 
 
-  urlDatabase[id] = newURL;
+  urlDatabase[id].longURL = newURL;
   res.redirect('/urls');
 });
 
@@ -186,11 +186,15 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
   const user_id = req.session.user_id;
+
+  console.log("user_id:", user_id);
  
   urlDatabase[shortURL] = {
     longURL: longURL,
     userID: user_id,
   };
+
+  console.log("urlDatabase:", urlDatabase);
   
   res.redirect(`/urls/${shortURL}`);
 });
@@ -273,6 +277,8 @@ app.get("/urls", (req, res) => {
   }
 
   const userUrls = urlsForUser(user_id);
+
+  console.log("urlDatabase:", urlDatabase);
 
   const templateVars = {
     user: users[user_id],

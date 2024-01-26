@@ -23,8 +23,10 @@
         <!-- post method to redirect to update, similar to what we did with delete -->
         
         <form method="POST" action="/urls/<%= id %>/update">
+          <label for="newURL">New URL:</label>
+        <input type="text" name="newURL" id="newURL" value="<%= urlObject.longURL %>" required>
           <!--button to submit-->
-          <button type="submit">Submit</button>
+          <button type="submit">update</button>
         </form>
           
     <!-- Bootstrap JS -->
