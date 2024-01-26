@@ -1,16 +1,17 @@
+//dependencies and frameworks
 const express = require("express");
 const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
-
-//require helper
 const helpers = require('./helpers');
 
-
+//other configurations
 const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
+
+//database initialization
 
 const urlDatabase = {
   "b2xVn2": {
@@ -23,6 +24,8 @@ const urlDatabase = {
   }
 };
 
+//functions
+//retrieve URLs associated with the user
 const urlsForUser = function(id) {
   const userUrls = {};
   for (const shortURL in urlDatabase) {
@@ -34,6 +37,7 @@ const urlsForUser = function(id) {
   return userUrls;
 };
 
+//provides short url to user
 const generateRandomString = function() {
   let randomString = "";
   let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -42,6 +46,8 @@ const generateRandomString = function() {
   }
   return randomString;
 };
+
+//
 
 app.use(express.urlencoded({ extended: true }));
 //added the json information decoder for
