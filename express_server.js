@@ -76,7 +76,7 @@ app.post("/register", (req, res) => {
     res.status(400).send("Please fill in both email and password to register.");
     return;
   }
-  if (getUserByEmail(email)) {
+  if (helpers.getUserByEmail(email, users)) {
     res.status(400).send("Email already registered.");
     return;
   }
