@@ -28,3 +28,73 @@ describe('getUserByEmail', function() {
     assert.isUndefined(user);
   })
 });
+
+//copy past from LLM
+
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const app = require('../your_app'); // Import your Express app
+const expect = chai.expect;
+
+chai.use(chaiHttp);
+
+describe('URL Access Tests', () => {
+  let agent = chai.request.agent(app); // Use chai-http agent to persist cookies
+
+  it('should redirect to login page for "/"', (done) => {
+    agent
+      .get('http://localhost:3000/')
+      .then((res) => {
+        expect(res).to.redirectTo('http://localhost:3000/login');
+        expect(res).to.have.status(302);
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('should redirect to login page for "/urls/new"', (done) => {
+    agent
+      .get('http://localhost:3000/urls/new')
+      .then((res) => {
+        expect(res).to.redirectTo('http://localhost:3000/login');
+        expect(res).to.have.status(302);
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('should return 404 for "/urls/NOTEXISTS"', (done) => {
+    agent
+      .get('http://localhost:3000/urls/NOTEXISTS')
+      .then((res) => {
+        expect(res).to.have.status(404);
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('should return 403 for "/urls/b2xVn2"', (done) => {
+    agent
+      .get('http://localhost:3000/urls/b2xVn2')
+      .then((res) => {
+        expect(res).to.have.status(403);
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  after((done) => {
+    // Cleanup after the test (e.g., logout or other necessary steps)
+    agent.close(() => {
+      done();
+    });
+  });
+});

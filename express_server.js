@@ -45,6 +45,8 @@ function generateRandomString() {
 }
 
 app.use(express.urlencoded({ extended: true }));
+//added the json information decoder for chai-http
+app.use(express.json());
 app.use(cookieParser());
 
 app.use(cookieSession ({
