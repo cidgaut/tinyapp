@@ -183,14 +183,18 @@ app.post("/urls", (req, res) => {
     res.status(403).send("You must be logged in to shorten URLs.");
     return;
   }
-  const longURL = req.body.longURL;
+  const longURL = req.body.longURL; //taking 
+  if (!longURL.startsWith("http://")) {
+    res.status(403).send("Your URL must include valid http:// path");
+    return;
+  }
   const shortURL = generateRandomString();
   const user_id = req.session.user_id;
 
   console.log("user_id:", user_id);
  
   urlDatabase[shortURL] = {
-    longURL: longURL,
+    longURL: longURL, //storing take extra consition for if url does not include http:
     userID: user_id,
   };
 
@@ -279,6 +283,7 @@ app.get("/urls", (req, res) => {
   const userUrls = urlsForUser(user_id);
 
   console.log("urlDatabase:", urlDatabase);
+  console.log(userUrls);
 
   const templateVars = {
     user: users[user_id],
