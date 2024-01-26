@@ -1,9 +1,12 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
-//another new dependency
 const cookieSession = require("cookie-session");
-//new dependency therefore new require
 const bcrypt = require("bcryptjs");
+
+//require helper
+const helpers = require('./helpers');
+
+
 const app = express();
 const PORT = 8080; 
 
@@ -41,22 +44,12 @@ function generateRandomString() {
   return randomString;
 }
 
-const getUserByEmail = function(email) {
-  for (const userId in users) {
-    if (users[userId].email === email) {
-      return users[userId];
-    }
-  }
-  return null;
-}
-
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-//add cookieSession 
 app.use(cookieSession ({
   name: 'session',
-  keys: ['abc', 'def', 'ghi'/*no need to add this for now, or even midterms*/],
+  keys: ['abc', 'def', 'ghi'],
 
   maxAge: 24 * 60 * 60 * 1000 //24 hours
 }));
@@ -75,7 +68,6 @@ const users = {
 };
 
 app.post("/register", (req, res) => {
-  //password needs to be udpated from register
   
   const email = req.body.email;
   const password = req.body.password;
@@ -88,7 +80,7 @@ app.post("/register", (req, res) => {
     res.status(400).send("Email already registered.");
     return;
   }
-  // declare hashedpassword before using it in newuser during registry
+  
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   const userID = generateRandomString();
@@ -96,13 +88,13 @@ app.post("/register", (req, res) => {
   const newUser = {
     id: userID,
     email: email,
-    //password for newuser should now be stored as a hashed password
+    
     password: hashedPassword,
   };
 
   users[userID] = newUser,
 
-  //updated res.cookie to the udpated req.session version
+  
   req.session.user_id = userID;
   res.redirect("/urls");
 });
@@ -110,26 +102,28 @@ app.post("/register", (req, res) => {
 
 app.post("/logout", (req, res) => {
 
-  //udpate the way to clear the cookie with session with null
+  
   req.session.user_id = null;
   res.redirect("/login");
 });
 
 app.post("/login", (req, res) => {
-  //password needs to be hashed in login as well to compare match
+  
 
   const email = req.body.email;
   const password = req.body.password;
-  const user = getUserByEmail(email);
+
+  //get user by email is used here, udpated to use the getUserByEmail fucntion frm helpers
+  const user = helpers.getUserByEmail(email, users);
   if (!user) {
     res.status(403).send("email not found");
     return;
   }
 
-  //need to update how the hashed password comparison works. is password correct return true or false
+  
   const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
-  //upate for comparison, if hashed key doesn't match 
+  
   if (!isPasswordCorrect) {
     res.status(403).send("incorrect password");
     return;
@@ -141,18 +135,15 @@ app.post("/login", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   const shortURL = req.params.id;
 
-  //should return a relevant error message if id does not exist
+  
   if (!urlDatabase[shortURL]) {
     return res.status(404).send("URL not found");
   }
 
-  //should return a relevant error message if the user is not logged in
-  //first update to new cookie session
   if (!req.session.user_id) {
     return res.status(404).send("You must log in to delete URLs");
   }
 
-  //should return a relevant error message if the user does not own the URL
   const user_id = req.session.user_id;
 
   if (user_id !== urlDatabase[shortURL].userID) {
@@ -167,18 +158,14 @@ app.post('/urls/:id/update', (req, res) => {
   const id = req.params.id;
   const newURL = req.body.newURL;
 
-  //should return a relevant error message if id does not exist
-  //changed shortURL to id
   if (!urlDatabase[id]) {
     return res.status(404).send("URL not found");
   }
 
-  //should return a relevant error message if the user is not logged in
   if (!req.session.user_id) {
     return res.status(404).send("You must log in to edit URLs");
   }
 
-  //should return a relevant error message if the user does not own the URL
   const user_id = req.session.user_id;
 
   if (user_id !== urlDatabase[id].userID) {
