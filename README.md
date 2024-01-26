@@ -8,8 +8,8 @@
 
 Include screenshots or images of your project. Replace the placeholder text with actual descriptions.
 
-![Screenshot 1 Description](docs/screenshot1.png)
-![Screenshot 2 Description](docs/screenshot2.png)
+!["user New URL creation"](https://github.com/cidgaut/tinyapp/blob/master/docs/TinyAppNewURLS.png)
+!["url page for all urls the user has created"](https://github.com/cidgaut/tinyapp/blob/master/docs/TinyAppURLS.png)
 
 ## Dependencies
 
