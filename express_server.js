@@ -1,5 +1,7 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+//another new dependency
+const cookieSession = require("cookie-session");
 //new dependency therefore new require
 const bcrypt = require("bcryptjs");
 const app = express();
@@ -50,6 +52,14 @@ const getUserByEmail = function(email) {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+//add cookieSession 
+app.use(cookieSession ({
+  name: 'session',
+  keys: ['abc', 'def', 'ghi'/*no need to add this for now, or even midterms*/],
+
+  maxAge: 24 * 60 * 60 * 1000 //24 hours
+}));
 
 const users = {
   userRandomID: {
@@ -134,12 +144,13 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 
   //should return a relevant error message if the user is not logged in
-  if (!req.cookies["user_id"]) {
+  //first update to new cookie session
+  if (!req.session.user_id) {
     return res.status(404).send("You must log in to delete URLs");
   }
 
   //should return a relevant error message if the user does not own the URL
-  const user_id = req.cookies["user_id"];
+  const user_id = req.session.user_id;
 
   if (user_id !== urlDatabase[shortURL].userID) {
     return res.status(403).send("Unable to delete another users URL");
@@ -160,12 +171,12 @@ app.post('/urls/:id/update', (req, res) => {
   }
 
   //should return a relevant error message if the user is not logged in
-  if (!req.cookies["user_id"]) {
+  if (!req.session.user_id) {
     return res.status(404).send("You must log in to edit URLs");
   }
 
   //should return a relevant error message if the user does not own the URL
-  const user_id = req.cookies["user_id"];
+  const user_id = req.session.user_id;
 
   if (user_id !== urlDatabase[id].userID) {
     return res.status(403).send("Unable to edit another users URL");
@@ -177,13 +188,13 @@ app.post('/urls/:id/update', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  if  (!req.cookies["user_id"]) {
+  if  (!req.session.user_id) {
     res.status(403).send("You must be logged in to shorten URLs.");
     return;
   }
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
-  const user_id = req.cookies["user_id"];
+  const user_id = req.session.user_id;
  
   urlDatabase[shortURL] = {
     longURL: longURL,
@@ -196,7 +207,7 @@ app.post("/urls", (req, res) => {
 
 app.get("/login", (req, res) => {
   
-  if (req.cookies["user_id"]) {
+  if (req.session.user_id) {
     res.redirect("/urls");
   } else {
   res.render("login");
@@ -205,7 +216,7 @@ app.get("/login", (req, res) => {
 
 app.get("/register", (req, res) => {
   
-  if (req.cookies["user_id"]) {
+  if (req.session.user_id) {
     res.redirect("/urls");
   } else {
   res.render("register");
@@ -214,12 +225,12 @@ app.get("/register", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   
-  if (!req.cookies["user_id"]) {
+  if (!req.session.user_id) {
     res.redirect("/login");
   } else {
 
 
-  const user_id =req.cookies["user_id"];
+  const user_id =req.session.user_id;
   const user = users[user_id];
   const templateVars = {
     user,
@@ -250,7 +261,7 @@ app.get("/urls/:id", (req, res) => {
   }
   
   const longURL = urlObject.longURL;
-  const user_id = req.cookies["user_id"];
+  const user_id = req.session.user_id;
 
   if (user_id !== urlObject.userID) {
     res.status(403).send("Access to URL denied");
@@ -267,7 +278,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const user_id =req.cookies["user_id"];
+  const user_id = req.session.user_id;
   if (!user_id) {
     return res.status(403).send("please log in to access URLs");
   }
