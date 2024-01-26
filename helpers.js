@@ -4,7 +4,7 @@ const getUserByEmail = function(email, users) {
       return users[userId];
     }
   }
-  return null;
+  return undefined;
 }
 
 //export function
