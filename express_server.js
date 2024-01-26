@@ -8,7 +8,7 @@ const helpers = require('./helpers');
 
 
 const app = express();
-const PORT = 8080; 
+const PORT = 8080;
 
 app.set("view engine", "ejs");
 
@@ -24,7 +24,6 @@ const urlDatabase = {
 };
 
 const urlsForUser = function(id) {
-  //received type error userID is undefined updated function 
   const userUrls = {};
   for (const shortURL in urlDatabase) {
     const urlObject = urlDatabase[shortURL];
@@ -33,23 +32,23 @@ const urlsForUser = function(id) {
     }
   }
   return userUrls;
-}
- 
-function generateRandomString() {
+};
+
+const generateRandomString = function() {
   let randomString = "";
-  let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  let characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (let i = 0; i < 6; i++) {
-    randomString += characters.charAt(Math.floor(Math.random() * characters.length))
+    randomString += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return randomString;
-}
+};
 
 app.use(express.urlencoded({ extended: true }));
 //added the json information decoder for
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cookieSession ({
+app.use(cookieSession({
   name: 'session',
   keys: ['abc', 'def', 'ghi'],
 
@@ -132,7 +131,7 @@ app.post("/login", (req, res) => {
   }
   req.session.user_id = user.id;
   res.redirect("/urls");
-})
+});
 
 app.post("/urls/:id/delete", (req, res) => {
   const shortURL = req.params.id;
@@ -154,7 +153,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
   delete urlDatabase[shortURL];
   res.redirect("/urls");
-})
+});
 
 app.post('/urls/:id/update', (req, res) => {
   const id = req.params.id;
@@ -202,7 +201,7 @@ app.get("/login", (req, res) => {
   if (req.session.user_id) {
     res.redirect("/urls");
   } else {
-  res.render("login");
+    res.render("login");
   }
 });
 
@@ -211,7 +210,7 @@ app.get("/register", (req, res) => {
   if (req.session.user_id) {
     res.redirect("/urls");
   } else {
-  res.render("register");
+    res.render("register");
   }
 });
 
@@ -220,14 +219,12 @@ app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/login");
   } else {
-
-
-  const user_id =req.session.user_id;
-  const user = users[user_id];
-  const templateVars = {
-    user,
-  };
-  res.render("urls_new", templateVars);
+    const user_id = req.session.user_id;
+    const user = users[user_id];
+    const templateVars = {
+      user,
+    };
+    res.render("urls_new", templateVars);
   }
 });
 
@@ -258,9 +255,9 @@ app.get("/urls/:id", (req, res) => {
   if (user_id !== urlObject.userID) {
     res.status(403).send("Access to URL denied");
     return;
-};
+  }
   
-  const templateVars = { 
+  const templateVars = {
     id: shortURL,
     longURL:longURL,
     user: user_id,
@@ -277,11 +274,11 @@ app.get("/urls", (req, res) => {
 
   const userUrls = urlsForUser(user_id);
 
-  const templateVars  = { 
+  const templateVars = {
     user: users[user_id],
     urls : userUrls,
   };
-    res.render("urls_index", templateVars);
+  res.render("urls_index", templateVars);
 });
 
 app.get("/", (req, res) => {
@@ -299,11 +296,11 @@ app.get("/hello", (req, res) => {
 app.get("/set", (req, res) => {
   const a = 1;
   res.send(`a = ${a}`);
- });
+});
  
- app.get("/fetch", (req, res) => {
+app.get("/fetch", (req, res) => {
   res.send(`a = ${a}`);
- });
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
