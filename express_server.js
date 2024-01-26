@@ -1,6 +1,5 @@
 //dependencies and frameworks
 const express = require("express");
-const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
 const helpers = require('./helpers');
@@ -52,7 +51,6 @@ const generateRandomString = function() {
 app.use(express.urlencoded({ extended: true }));
 //added the json information decoder for
 app.use(express.json());
-app.use(cookieParser());
 
 app.use(cookieSession({
   name: 'session',
@@ -211,20 +209,28 @@ app.post("/urls", (req, res) => {
 
 
 app.get("/login", (req, res) => {
-  
-  if (req.session.user_id) {
+  const user_id = req.session.user_id
+  const templateVars = {
+    user: user_id ? users[user_id] : null,
+  };
+
+  if (user_id) {
     res.redirect("/urls");
   } else {
-    res.render("login");
+    res.render("login", templateVars);
   }
 });
 
 app.get("/register", (req, res) => {
+  const user_id = req.session.user_id
+  const templateVars = {
+    user: user_id ? users[user_id] : null,
+  };
   
-  if (req.session.user_id) {
+  if (user_id) {
     res.redirect("/urls");
   } else {
-    res.render("register");
+    res.render("register", templateVars);
   }
 });
 

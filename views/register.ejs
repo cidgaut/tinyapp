@@ -20,6 +20,7 @@ include a form with an email address and password field-->
     <title>Register user</title>
   </head>
   <body>
+    <%- include('partials/_header') %>
     <form method="POST" action="/register" class="form-inline">
       <label for="email" class="mr-2">email</label>
         <input type="email" class="form-control" name="email" value="" required>
