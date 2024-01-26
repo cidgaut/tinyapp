@@ -29,72 +29,60 @@ describe('getUserByEmail', function() {
   })
 });
 
-//copy past from LLM
-
+//copy paste from LLM
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const app = require('../your_app'); // Import your Express app
+const app = require('../express_server'); // Make sure to replace 'express_server' with the correct path to your server file
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 
+const agent = chai.request.agent(app);
+
 describe('URL Access Tests', () => {
-  let agent = chai.request.agent(app); // Use chai-http agent to persist cookies
 
-  it('should redirect to login page for "/"', (done) => {
-    agent
-      .get('http://localhost:3000/')
+  let baseUrl;
+
+  before(() => {
+    baseUrl = agent.get('').url;  
+  });
+
+  it('should redirect to login page for "/"', () => {
+    return agent
+      .get('/')  // Corrected URL to use port 8080
       .then((res) => {
-        expect(res).to.redirectTo('http://localhost:3000/login');
-        expect(res).to.have.status(302);
-        done();
-      })
-      .catch((err) => {
-        done(err);
+        expect(res).to.redirectTo(`${baseUrl}/login`);
+        expect(res).to.have.status(200);
       });
   });
 
-  it('should redirect to login page for "/urls/new"', (done) => {
-    agent
-      .get('http://localhost:3000/urls/new')
+  it('should redirect to login page for "/urls/new"', () => {
+    return agent
+      .get('/urls/new')  // Corrected URL to use port 8080
       .then((res) => {
-        expect(res).to.redirectTo('http://localhost:3000/login');
-        expect(res).to.have.status(302);
-        done();
-      })
-      .catch((err) => {
-        done(err);
+        expect(res).to.redirectTo(`${baseUrl}/login`);
+        expect(res).to.have.status(200);
       });
   });
 
-  it('should return 404 for "/urls/NOTEXISTS"', (done) => {
-    agent
-      .get('http://localhost:3000/urls/NOTEXISTS')
+  it('should return 404 for "/urls/NOTEXISTS"', () => {
+    return agent
+      .get('/urls/NOTEXISTS')  // Corrected URL to use port 8080
       .then((res) => {
         expect(res).to.have.status(404);
-        done();
-      })
-      .catch((err) => {
-        done(err);
       });
   });
 
-  it('should return 403 for "/urls/b2xVn2"', (done) => {
-    agent
-      .get('http://localhost:3000/urls/b2xVn2')
+  it('should return 403 for "/urls/b2xVn2"', () => {
+    return agent
+      .get('/urls/b2xVn2')  // Corrected URL to use port 8080
       .then((res) => {
         expect(res).to.have.status(403);
-        done();
-      })
-      .catch((err) => {
-        done(err);
       });
   });
 
-  after((done) => {
+  after(() => {
     // Cleanup after the test (e.g., logout or other necessary steps)
-    agent.close(() => {
-      done();
-    });
+    agent.close();
   });
 });

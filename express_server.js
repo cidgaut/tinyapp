@@ -45,7 +45,7 @@ function generateRandomString() {
 }
 
 app.use(express.urlencoded({ extended: true }));
-//added the json information decoder for chai-http
+//added the json information decoder for
 app.use(express.json());
 app.use(cookieParser());
 
@@ -285,7 +285,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.redirect("/login");
 });
 
 app.get("/urls.json", (req, res) => {
@@ -308,3 +308,5 @@ app.get("/set", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 }); 
+
+module.exports = app;
