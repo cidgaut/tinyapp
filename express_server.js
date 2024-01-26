@@ -102,13 +102,16 @@ app.post("/register", (req, res) => {
 
   users[userID] = newUser,
 
-  res.cookie('user_id', userID);
+  //updated res.cookie to the udpated req.session version
+  req.session.user_id = userID;
   res.redirect("/urls");
 });
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
+
+  //udpate the way to clear the cookie with session with null
+  req.session.user_id = null;
   res.redirect("/login");
 });
 
@@ -131,7 +134,7 @@ app.post("/login", (req, res) => {
     res.status(403).send("incorrect password");
     return;
   }
-  res.cookie('user_id', user.id);
+  req.session.user_id = user.id;
   res.redirect("/urls");
 })
 
